@@ -1,9 +1,9 @@
-<script setup>
-import TheHeader from '@components/TheHeader.vue'
-</script>
+<script setup></script>
 
 <template>
-  <the-header></the-header>
+  <div class="h-100 w-100 pa-15">
+    <router-view></router-view>
+  </div>
 </template>
 
 <style scoped></style>
