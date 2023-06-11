@@ -10,8 +10,6 @@ const axiosClient = axios.create({
 const httpClient = {
   async get(url, params = {}) {
     try {
-      console.log('params', params)
-
       const response = await axiosClient.get(url, { params })
       return response
     } catch (error) {

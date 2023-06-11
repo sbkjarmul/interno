@@ -4,18 +4,17 @@
       <h1 class="m-0 text-h4">{{ userListContent.title }}</h1>
     </div>
 
-    <div class="my-5 px-5 py-10 h-100 shadow rounded bg-white">
-      <div class="d-flex flex-row pb-3">
-        <div class="w-25">
+    <div class="my-5 px-sm-5 py-10 h-100 shadow rounded bg-white">
+      <div class="d-flex flex-column flex-sm-row pb-3 px-2 px-sm-0">
+        <div class="w-100">
           <v-text-field
             v-model="search"
             :placeholder="userListContent.searchForUsers"
-            clearable
             variant="outlined"
             append-inner-icon="mdi-magnify"
           ></v-text-field>
         </div>
-        <div class="w-75 d-flex justify-end">
+        <div class="w-100 d-flex justify-end">
           <v-btn
             prepend-icon="mdi-plus"
             variant="flat"
@@ -23,50 +22,67 @@
             density="comfortable"
             rounded="xl"
             class="bg-primary text-capitalize letter-spacing-0"
-            @click="handleAddUser"
+            @click="handleAddButtonClick"
             >{{ userListContent.addUser }}</v-btn
           >
         </div>
       </div>
+
       <v-divider class="mb-3"></v-divider>
-      <div>
-        <v-table>
-          <thead>
-            <tr>
-              <th class="text-left" width="10%"></th>
-              <th class="text-left text-subtitle-2 font-weight-bold">
-                {{ userListContent.fullName }}
-              </th>
-              <th class="text-center text-subtitle-2 font-weight-bold" width="100px">
-                {{ userListContent.actions }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(item, index) in interns"
-              :key="item.name"
-              :class="{ 'bg-secondary': !index % 2 }"
-            >
-              <td class="text-left">
-                <v-avatar :image="item.avatar" size="32" class="my-2"></v-avatar>
-              </td>
-              <td class="text-left text-subtitle-2 font-weight-medium">{{ item.name }}</td>
-              <td>
-                <v-btn icon="mdi-square-edit-outline" variant="plain"></v-btn>
-                <v-btn icon="mdi-delete" variant="plain"></v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
-      </div>
+
+      <v-table v-if="filteredUsers.length">
+        <thead>
+          <tr>
+            <th class="text-left" width="10%"></th>
+            <th class="text-left text-subtitle-2 font-weight-bold">
+              {{ userListContent.fullName }}
+            </th>
+            <th class="text-center text-subtitle-2 font-weight-bold" width="100px">
+              {{ userListContent.actions }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(item, index) in filteredUsers"
+            :key="item.id"
+            :class="{ 'bg-secondary': !(index % 2) }"
+          >
+            <td class="text-left">
+              <v-avatar :image="item.avatar" size="32" class="my-2"></v-avatar>
+            </td>
+            <td class="text-left text-subtitle-2 font-weight-medium">
+              {{ `${item.firstName} ${item.lastName}` }}
+            </td>
+            <td>
+              <v-btn
+                icon="mdi-square-edit-outline"
+                variant="plain"
+                @click="() => handleEditIconClick(item)"
+              ></v-btn>
+              <v-btn
+                icon="mdi-delete"
+                variant="plain"
+                @click="() => handleDeleteIconClick(item?.id)"
+              ></v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
+
+      <template v-else>
+        <p>
+          {{ userListContent.noMatch }} "<b>{{ search }}"</b>
+        </p>
+        <p>{{ userListContent.checkNextOrPreviousPage }}</p>
+      </template>
     </div>
 
     <div class="w-100">
       <div class="w-100">
         <v-pagination
           v-model="page"
-          :length="length"
+          :length="totalPages"
           prev-icon="mdi-menu-left"
           next-icon="mdi-menu-right"
         ></v-pagination>
@@ -76,31 +92,64 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watchEffect, computed, unref } from 'vue'
 import { useRouter } from 'vue-router'
+import useUsers from '@composables/useUsers'
 import content from '@/assets/content.json'
 
 const userListContent = content.views.userList
+const users = ref([])
 const search = ref('')
 const page = ref(1)
-const length = ref(15)
-const interns = ref([
-  {
-    avatar:
-      'https://static.wikia.nocookie.net/naruto/images/4/4a/Obito_Uchiha.png/revision/latest/scale-to-width-down/699?cb=20161010144227&path-prefix=pl',
-    name: 'John Doe'
-  },
-  {
-    avatar:
-      'https://static.wikia.nocookie.net/naruto/images/4/4a/Obito_Uchiha.png/revision/latest/scale-to-width-down/699?cb=20161010144227&path-prefix=pl',
-    name: 'Jane Doe'
-  }
-])
+const totalPages = ref(0)
 
 const router = useRouter()
+const { getAllUsers, deleteUser } = useUsers()
 
-function handleAddUser() {
+const filteredUsers = computed(() =>
+  users.value.filter((user) => {
+    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase()
+    const searchValue = search.value.toLowerCase()
+
+    if (fullName.includes(searchValue)) {
+      return user
+    }
+  })
+)
+
+watchEffect(() => {
+  console.log('rerender UserListView')
+  getAllUsers({ page: page.value }).then((res) => {
+    users.value = [...res.data]
+    totalPages.value = res.totalPages
+  })
+})
+
+function handleAddButtonClick() {
   router.push({ name: 'add-user' })
+}
+
+function handleEditIconClick(userId) {
+  router.push({ name: 'edit-user', params: userId })
+}
+
+function handleDeleteIconClick(userId) {
+  if (!userId) return
+
+  deleteUser(userId).then((res) => {
+    if (res.status > 200 && res.status < 300) {
+      removeCachedUser(userId)
+      router.push({ name: 'user-list' })
+    }
+  })
+}
+
+function removeCachedUser(userId) {
+  const index = users.value.findIndex((user) => user.id === userId)
+
+  if (index === -1) return
+
+  users.value.splice(index, 1)
 }
 </script>
 

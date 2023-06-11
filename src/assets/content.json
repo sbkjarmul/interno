@@ -5,12 +5,15 @@
       "addUser": "Add User",
       "searchForUsers": "Search for users",
       "fullName": "Full Name",
-      "actions": "Actions"
+      "actions": "Actions",
+      "noMatch": "There is no more users matching:",
+      "checkNextOrPreviousPage": "Check next or previous page."
     },
     "addEditUser": {
       "firstName": "First Name",
       "lastName": "Last Name",
       "addUser": "Add User",
+      "editUser": "Edit User",
       "addPhoto": "Add photo",
       "changePhoto": "Change Photo",
       "deleteUser": "Delete User",
