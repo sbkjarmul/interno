@@ -1,35 +1,31 @@
 <template>
-  <div class="d-flex justify-space-between flex-column h-100">
-    <div class="w-100 text-start">
-      <h1 class="m-0 text-h4">{{ userListContent.title }}</h1>
-    </div>
+  <MainLayout>
+    <template #title>{{ userListContent.title }}</template>
 
-    <div class="my-5 px-sm-5 py-10 h-100 shadow rounded bg-white">
-      <div class="d-flex flex-column flex-sm-row pb-3 px-2 px-sm-0">
-        <div class="w-100">
-          <v-text-field
-            v-model="search"
-            :placeholder="userListContent.searchForUsers"
-            variant="outlined"
-            append-inner-icon="mdi-magnify"
-          ></v-text-field>
-        </div>
-        <div class="w-100 d-flex justify-end">
-          <v-btn
-            prepend-icon="mdi-plus"
-            variant="flat"
-            size="large"
-            density="comfortable"
-            rounded="xl"
-            class="bg-primary text-capitalize letter-spacing-0"
-            @click="handleAddButtonClick"
-            >{{ userListContent.addUser }}</v-btn
-          >
-        </div>
+    <template #topbar>
+      <div class="w-100">
+        <v-text-field
+          v-model="search"
+          :placeholder="userListContent.searchForUsers"
+          variant="outlined"
+          append-inner-icon="mdi-magnify"
+        ></v-text-field>
       </div>
+      <div class="w-100 d-flex justify-end">
+        <v-btn
+          prepend-icon="mdi-plus"
+          variant="flat"
+          size="large"
+          density="comfortable"
+          rounded="xl"
+          class="bg-primary text-capitalize letter-spacing-0"
+          @click="handleAddButtonClick"
+          >{{ userListContent.addUser }}</v-btn
+        >
+      </div>
+    </template>
 
-      <v-divider class="mb-3"></v-divider>
-
+    <template #main>
       <v-table v-if="filteredUsers.length">
         <thead>
           <tr>
@@ -58,12 +54,12 @@
               <v-btn
                 icon="mdi-square-edit-outline"
                 variant="plain"
-                @click="() => handleEditIconClick(item)"
+                @click="() => handleEditIconClick(item.id)"
               ></v-btn>
               <v-btn
                 icon="mdi-delete"
                 variant="plain"
-                @click="() => handleDeleteIconClick(item?.id)"
+                @click="() => handleDeleteIconClick(item.id)"
               ></v-btn>
             </td>
           </tr>
@@ -76,35 +72,34 @@
         </p>
         <p>{{ userListContent.checkNextOrPreviousPage }}</p>
       </template>
-    </div>
+    </template>
 
-    <div class="w-100">
-      <div class="w-100">
-        <v-pagination
-          v-model="page"
-          :length="totalPages"
-          prev-icon="mdi-menu-left"
-          next-icon="mdi-menu-right"
-        ></v-pagination>
-      </div>
-    </div>
-  </div>
+    <template #bottom>
+      <v-pagination
+        v-model="page"
+        :length="totalPages"
+        prev-icon="mdi-menu-left"
+        next-icon="mdi-menu-right"
+      ></v-pagination>
+    </template>
+  </MainLayout>
 </template>
 
 <script setup>
-import { ref, watchEffect, computed, unref } from 'vue'
+import { ref, watchEffect, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import useUsers from '@composables/useUsers'
 import content from '@/assets/content.json'
+import MainLayout from '@/layouts/MainLayout.vue'
 
 const userListContent = content.views.userList
-const users = ref([])
+// const users = ref([])
 const search = ref('')
 const page = ref(1)
 const totalPages = ref(0)
 
 const router = useRouter()
-const { getAllUsers, deleteUser } = useUsers()
+const { getAllUsers, deleteUser, cachedUsers: users } = useUsers()
 
 const filteredUsers = computed(() =>
   users.value.filter((user) => {
@@ -120,7 +115,6 @@ const filteredUsers = computed(() =>
 watchEffect(() => {
   console.log('rerender UserListView')
   getAllUsers({ page: page.value }).then((res) => {
-    users.value = [...res.data]
     totalPages.value = res.totalPages
   })
 })
@@ -130,7 +124,8 @@ function handleAddButtonClick() {
 }
 
 function handleEditIconClick(userId) {
-  router.push({ name: 'edit-user', params: userId })
+  console.log(userId)
+  router.push({ name: 'edit-user', params: { id: userId } })
 }
 
 function handleDeleteIconClick(userId) {
@@ -142,14 +137,6 @@ function handleDeleteIconClick(userId) {
       router.push({ name: 'user-list' })
     }
   })
-}
-
-function removeCachedUser(userId) {
-  const index = users.value.findIndex((user) => user.id === userId)
-
-  if (index === -1) return
-
-  users.value.splice(index, 1)
 }
 </script>
 

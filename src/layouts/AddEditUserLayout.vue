@@ -11,29 +11,7 @@
         class="px-5 pt-10 pb-5 h-100 w-sm-60 d-flex flex-column justify-space-between align-start shadow rounded bg-white"
       >
         <div class="d-flex flex-md-row flex-column pb-3 w-100">
-          <div class="w-100 w-md-50 mr-2 d-flex flex-column justify-start align-start">
-            <label class="font-weight-bold mb-2 text-subtitle-2 text-dark" for="firstName">
-              {{ addEditUserContent.firstName }}
-            </label>
-            <v-text-field
-              name="firstName"
-              :placeholder="addEditUserContent.enterFirstName"
-              variant="outlined"
-              class="w-100"
-            >
-            </v-text-field>
-          </div>
-          <div class="w-100 w-md-50 ml-0 ml-md-2 d-flex flex-column justify-start align-start">
-            <label class="font-weight-bold mb-2 text-subtitle-2 text-dark" for="firstName">
-              {{ addEditUserContent.lastName }}
-            </label>
-            <v-text-field
-              name="lastName"
-              :placeholder="addEditUserContent.enterLastName"
-              variant="outlined"
-              class="w-100"
-            ></v-text-field>
-          </div>
+          <slot name="text-fields"></slot>
         </div>
 
         <div>
@@ -45,11 +23,7 @@
         class="ml-0 ml-sm-5 mt-5 mt-sm-0 px-5 pt-10 pb-5 w-sm-40 h-100 d-flex flex-column justify-space-between shadow rounded bg-white"
       >
         <div>
-          <v-avatar
-            image="https://static.wikia.nocookie.net/naruto/images/4/4a/Obito_Uchiha.png/revision/latest/scale-to-width-down/699?cb=20161010144227&path-prefix=pl"
-            size="100"
-            class="border-secondary outline mb-5"
-          ></v-avatar>
+          <slot name="avatar"></slot>
         </div>
         <div class="d-flex flex-row">
           <slot name="change-photo-button"></slot>
@@ -58,28 +32,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import content from '@/assets/content.json'
-const addEditUserContent = content.views.addEditUser
-</script>
-
-<style scoped>
-/* Input */
-:deep(.v-field__input) {
-  --v-field-input-min-height: 30px;
-  padding: 4px 14px;
-  font-size: 12px;
-}
-
-:deep(.v-field__outline) {
-  opacity: 0.4;
-}
-
-/* Change photo button */
-:deep(.v-btn__prepend) {
-  font-size: 10px;
-  transform: translateY(1px);
-  margin-inline-end: 0;
-}
-</style>
