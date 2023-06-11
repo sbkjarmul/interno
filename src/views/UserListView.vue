@@ -22,13 +22,14 @@
             size="large"
             rounded="xl"
             class="bg-primary text-capitalize letter-spacing-0"
+            @click="handleAddUser"
             >Add user</v-btn
           >
         </div>
       </div>
-      <v-divider></v-divider>
+      <v-divider class="mb-3"></v-divider>
       <div>
-        <v-table :style="{ borderCollapse: 'collapse', borderSpacing: 0 }">
+        <v-table>
           <thead>
             <tr>
               <th class="text-left" width="10%"></th>
@@ -37,7 +38,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in interns" :key="item.name">
+            <tr
+              v-for="(item, index) in interns"
+              :key="item.name"
+              :class="{ 'bg-secondary': !index % 2 }"
+            >
               <td>
                 <v-avatar :image="item.avatar" size="40" class="my-2"></v-avatar>
               </td>
@@ -67,6 +72,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const page = ref(1)
 const length = ref(15)
@@ -82,17 +88,23 @@ const interns = ref([
     name: 'Jane Doe'
   }
 ])
+
+const router = useRouter()
+
+function handleAddUser() {
+  router.push({ name: 'add-user' })
+}
 </script>
 
 <style scoped>
 /* Pagination */
-::v-deep(.v-pagination__list) {
+:deep(.v-pagination__list) {
   justify-content: start;
 }
 
-::v-deep(.v-pagination__item),
-::v-deep(.v-pagination__prev),
-::v-deep(.v-pagination__next) {
+:deep(.v-pagination__item),
+:deep(.v-pagination__prev),
+:deep(.v-pagination__next) {
   border: 1px solid #ccc;
   border-right: 0;
   margin: 0;
@@ -100,56 +112,57 @@ const interns = ref([
   background-color: rgb(var(--v-theme-white));
 }
 
-::v-deep(.v-pagination__next) {
+:deep(.v-pagination__next) {
   border-right: 1px solid #ccc;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
 
-::v-deep(.v-pagination__prev) {
+:deep(.v-pagination__prev) {
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
 
-::v-deep(.v-pagination .v-btn) {
+:deep(.v-pagination .v-btn) {
   border-radius: 0;
 }
 
-::v-deep(.v-pagination__item--is-active .v-btn--size-default) {
+:deep(.v-pagination__item--is-active .v-btn--size-default) {
   background-color: rgb(var(--v-theme-primary));
   color: rgb(var(--v-theme-white));
 }
 
 /* Buttons */
-::v-deep(.v-btn--size-default) {
+:deep(.v-btn--size-default) {
   --v-btn-height: 24px;
 }
 
 /* Searchbox */
-::v-deep(.v-field__outline) {
+:deep(.v-field__outline) {
   --v-field-border-width: 0px;
 }
 
-::v-deep(.v-field__input) {
+:deep(.v-field__input) {
   --v-field-input-min-height: 30px;
   padding: 6px 12px;
   font-size: 16px;
 }
 
-::v-deep(.v-field__overlay) {
-  background-color: rgb(var(--v-theme-secondary));
+:deep(.v-field__overlay) {
+  background-color: rgb(var(--v-theme-secondary)) !important;
 }
 
-::v-deep(.v-field--variant-outlined .v-field--focused) {
-  border-color: rgb(var(--v-theme-primary));
-}
-
-::v-deep(.v-field__append-inner .v-icon) {
+:deep(.v-field__append-inner .v-icon) {
   --v-icon-size-multiplier: 0.9;
 }
 
 /* Table */
-::v-deep(.v-btn--variant-plain .v-icon) {
+:deep(.v-btn--variant-plain .v-icon) {
   --v-icon-size-multiplier: 0.8;
+}
+
+.v-table .v-table__wrapper > table > thead > tr > th,
+.v-table .v-table__wrapper > table > tbody > tr:not(:last-child) > td {
+  border-bottom: none;
 }
 </style>
