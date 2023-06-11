@@ -6,9 +6,9 @@
       </h1>
     </div>
 
-    <div class="d-flex flex-column flex-sm-row h-100 mt-5">
+    <div class="d-flex flex-column flex-sm-row h-50 mt-5">
       <div
-        class="px-5 pt-10 pb-5 h-50 w-100 w-sm-50 w-md-75 d-flex flex-column justify-space-between align-start shadow rounded bg-white"
+        class="px-5 pt-10 pb-5 h-100 w-sm-60 d-flex flex-column justify-space-between align-start shadow rounded bg-white"
       >
         <div class="d-flex flex-md-row flex-column pb-3 w-100">
           <div class="w-100 w-md-50 mr-2 d-flex flex-column justify-start align-start">
@@ -42,13 +42,13 @@
       </div>
 
       <div
-        class="ml-0 ml-sm-5 mt-5 mt-sm-0 px-5 pt-10 pb-5 w-100 w-sm-50 w-md-25 h-50 d-flex flex-column justify-space-between shadow rounded bg-white"
+        class="ml-0 ml-sm-5 mt-5 mt-sm-0 px-5 pt-10 pb-5 w-sm-40 h-100 d-flex flex-column justify-space-between shadow rounded bg-white"
       >
         <div>
           <v-avatar
             image="https://static.wikia.nocookie.net/naruto/images/4/4a/Obito_Uchiha.png/revision/latest/scale-to-width-down/699?cb=20161010144227&path-prefix=pl"
             size="100"
-            class="border-secondary outline"
+            class="border-secondary outline mb-5"
           ></v-avatar>
         </div>
         <div class="d-flex flex-row">
