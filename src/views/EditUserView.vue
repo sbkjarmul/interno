@@ -1,12 +1,18 @@
 <template>
   <add-edit-user-layout>
-    <template #title>Add user</template>
+    <template #title>Edit user</template>
     <template #action-buttons>
+      <v-btn
+        variant="flat"
+        class="bg-primary text-capitalize letter-spacing-0 mr-2"
+        @click="handleUpdate"
+        >Update details
+      </v-btn>
       <v-btn
         variant="flat"
         class="bg-primary text-capitalize letter-spacing-0"
         @click="handleUpdate"
-        >Add user
+        >Delete user
       </v-btn>
     </template>
     <template #change-photo-button>

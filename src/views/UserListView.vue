@@ -6,7 +6,7 @@
 
     <div class="my-5 px-5 py-10 h-100 shadow rounded bg-white">
       <div class="d-flex flex-row pb-3">
-        <div class="w-50">
+        <div class="w-25">
           <v-text-field
             v-model="search"
             placeholder="Search for users"
@@ -15,11 +15,12 @@
             append-inner-icon="mdi-magnify"
           ></v-text-field>
         </div>
-        <div class="w-50 d-flex justify-end">
+        <div class="w-75 d-flex justify-end">
           <v-btn
             prepend-icon="mdi-plus"
             variant="flat"
             size="large"
+            density="comfortable"
             rounded="xl"
             class="bg-primary text-capitalize letter-spacing-0"
             @click="handleAddUser"
@@ -34,7 +35,7 @@
             <tr>
               <th class="text-left" width="10%"></th>
               <th class="text-left text-subtitle-2 font-weight-bold">Full Name</th>
-              <th class="text-center text-subtitle-2 font-weight-bold" width="15%">Action</th>
+              <th class="text-center text-subtitle-2 font-weight-bold" width="100px">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -43,8 +44,8 @@
               :key="item.name"
               :class="{ 'bg-secondary': !index % 2 }"
             >
-              <td>
-                <v-avatar :image="item.avatar" size="40" class="my-2"></v-avatar>
+              <td class="text-left">
+                <v-avatar :image="item.avatar" size="32" class="my-2"></v-avatar>
               </td>
               <td class="text-left text-subtitle-2 font-weight-medium">{{ item.name }}</td>
               <td>
@@ -74,6 +75,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+const search = ref('')
 const page = ref(1)
 const length = ref(15)
 const interns = ref([
@@ -134,7 +136,15 @@ function handleAddUser() {
 
 /* Buttons */
 :deep(.v-btn--size-default) {
-  --v-btn-height: 24px;
+  --v-btn-height: 16px;
+}
+
+:deep(.v-btn--density-comfortable) {
+  font-size: 12px;
+}
+
+:deep(.v-btn__prepend) {
+  margin-right: 4px;
 }
 
 /* Searchbox */
@@ -144,8 +154,8 @@ function handleAddUser() {
 
 :deep(.v-field__input) {
   --v-field-input-min-height: 30px;
-  padding: 6px 12px;
-  font-size: 16px;
+  padding: 4px 12px;
+  font-size: 12px;
 }
 
 :deep(.v-field__overlay) {
@@ -153,16 +163,22 @@ function handleAddUser() {
 }
 
 :deep(.v-field__append-inner .v-icon) {
-  --v-icon-size-multiplier: 0.9;
+  --v-icon-size-multiplier: 0.7;
 }
 
 /* Table */
 :deep(.v-btn--variant-plain .v-icon) {
   --v-icon-size-multiplier: 0.8;
+  color: rgb(var(--v-theme-darken1));
 }
 
 .v-table .v-table__wrapper > table > thead > tr > th,
 .v-table .v-table__wrapper > table > tbody > tr:not(:last-child) > td {
   border-bottom: none;
+}
+
+.v-table--density-default > .v-table__wrapper > table > tbody > tr > td,
+.v-table--density-default > .v-table__wrapper > table > thead > tr > th {
+  height: 36px;
 }
 </style>
