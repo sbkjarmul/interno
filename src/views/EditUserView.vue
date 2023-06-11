@@ -6,13 +6,14 @@
         variant="flat"
         class="bg-primary text-capitalize letter-spacing-0 mr-2"
         @click="handleUpdate"
-        >Update details
+      >
+        {{ addEditUserContent.updateDetails }}
       </v-btn>
       <v-btn
         variant="flat"
         class="bg-primary text-capitalize letter-spacing-0"
         @click="handleUpdate"
-        >Delete user
+        >{{ addEditUserContent.deleteUser }}
       </v-btn>
     </template>
     <template #change-photo-button>
@@ -23,7 +24,7 @@
         block
         @click="handleChangePhoto"
       >
-        Change photo
+        {{ addEditUserContent.changePhoto }}
       </v-btn>
     </template>
   </add-edit-user-layout>
@@ -32,6 +33,9 @@
 <script setup>
 import AddEditUserLayout from '@/layouts/AddEditUserLayout.vue'
 import { useRouter } from 'vue-router'
+import content from '@/assets/content.json'
+
+const addEditUserContent = content.views.addEditUser
 
 const router = useRouter()
 

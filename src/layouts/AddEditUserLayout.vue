@@ -13,23 +13,23 @@
         <div class="d-flex flex-row pb-3 w-100">
           <div class="w-50 mr-2 d-flex flex-column justify-start align-start">
             <label class="font-weight-bold mb-2 text-subtitle-2 text-dark" for="firstName">
-              First Name
+              {{ addEditUserContent.firstName }}
             </label>
             <v-text-field
               name="firstName"
-              placeholder="Enter name"
+              :placeholder="addEditUserContent.enterFirstName"
               variant="outlined"
               class="w-100"
             >
             </v-text-field>
           </div>
           <div class="w-50 ml-2 d-flex flex-column justify-start align-start">
-            <label class="font-weight-bold mb-2 text-subtitle-2 text-dark" for="firstName"
-              >Last Name</label
-            >
+            <label class="font-weight-bold mb-2 text-subtitle-2 text-dark" for="firstName">
+              {{ addEditUserContent.lastName }}
+            </label>
             <v-text-field
               name="lastName"
-              placeholder="Enter last name"
+              :placeholder="addEditUserContent.enterLastName"
               variant="outlined"
               class="w-100"
             ></v-text-field>
@@ -58,6 +58,11 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import content from '@/assets/content.json'
+const addEditUserContent = content.views.addEditUser
+</script>
 
 <style scoped>
 /* Input */

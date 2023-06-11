@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-space-between flex-column h-100">
     <div class="w-100 text-start">
-      <h1 class="m-0 text-h4">Users list</h1>
+      <h1 class="m-0 text-h4">{{ userListContent.title }}</h1>
     </div>
 
     <div class="my-5 px-5 py-10 h-100 shadow rounded bg-white">
@@ -9,7 +9,7 @@
         <div class="w-25">
           <v-text-field
             v-model="search"
-            placeholder="Search for users"
+            :placeholder="userListContent.searchForUsers"
             clearable
             variant="outlined"
             append-inner-icon="mdi-magnify"
@@ -24,7 +24,7 @@
             rounded="xl"
             class="bg-primary text-capitalize letter-spacing-0"
             @click="handleAddUser"
-            >Add user</v-btn
+            >{{ userListContent.addUser }}</v-btn
           >
         </div>
       </div>
@@ -34,8 +34,12 @@
           <thead>
             <tr>
               <th class="text-left" width="10%"></th>
-              <th class="text-left text-subtitle-2 font-weight-bold">Full Name</th>
-              <th class="text-center text-subtitle-2 font-weight-bold" width="100px">Action</th>
+              <th class="text-left text-subtitle-2 font-weight-bold">
+                {{ userListContent.fullName }}
+              </th>
+              <th class="text-center text-subtitle-2 font-weight-bold" width="100px">
+                {{ userListContent.actions }}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -74,7 +78,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import content from '@/assets/content.json'
 
+const userListContent = content.views.userList
 const search = ref('')
 const page = ref(1)
 const length = ref(15)
@@ -137,6 +143,7 @@ function handleAddUser() {
 /* Buttons */
 :deep(.v-btn--size-default) {
   --v-btn-height: 16px;
+  font-size: 12px;
 }
 
 :deep(.v-btn--density-comfortable) {
@@ -145,6 +152,10 @@ function handleAddUser() {
 
 :deep(.v-btn__prepend) {
   margin-right: 4px;
+}
+
+:deep(.v-pagination .v-btn) {
+  font-size: 14px;
 }
 
 /* Searchbox */
