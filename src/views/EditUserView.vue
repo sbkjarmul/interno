@@ -116,7 +116,7 @@ function handleChangePhoto() {
     </template>
 
     <template #change-photo-button>
-      <v-dialog v-model="dialog" width="auto">
+      <v-dialog v-model="dialog" width="300px">
         <template v-slot:activator="{ props }">
           <v-btn
             prepend-icon="mdi-camera"
@@ -130,7 +130,7 @@ function handleChangePhoto() {
         </template>
 
         <v-card class="pa-5">
-          <v-card-text> {{ addEditUserContent.enterPhotoUrl }} </v-card-text>
+          <v-card-text class="text-center"> {{ addEditUserContent.enterPhotoUrl }} </v-card-text>
           <v-text-field
             name="avatar"
             :placeholder="addEditUserContent.enterPhotoUrl"
