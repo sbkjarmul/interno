@@ -1,52 +1,65 @@
 <script setup>
-import content from '@/assets/content.json'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import useUsers from '@composables/useUsers'
+import { useUsers } from '@composables'
+import { useUserStore } from '@/store'
+import content from '@/assets/content.json'
 import AddEditUserLayout from '@/layouts/AddEditUserLayout.vue'
 
 const addEditUserContent = content.views.addEditUser
 
-const user = ref(null)
-
-const firstName = computed(() => user.value?.firstName || '')
-const lastName = computed(() => user.value?.lastName || '')
-const avatar = computed(() => user.value?.avatar || 'https://i.pravatar.cc/300')
+const user = ref({ firstName: '', lastName: '', avatar: '' })
+const dialog = ref(false)
 
 const router = useRouter()
 const { getUser, updateUser, deleteUser } = useUsers()
+const userStore = useUserStore()
+const { updateCachedUser, deleteCachedUser, getCachedUser } = userStore
 
 onMounted(() => {
   const { id } = router.currentRoute.value.params
 
   if (!id) return
 
-  getUser(id).then(async (res) => {
-    user.value = res
-  })
+  getUser(id)
+    .then(() => {})
+    .finally(() => {
+      const idAsNumber = Number(id)
+      const cachedUser = getCachedUser(idAsNumber)
+      if (!cachedUser) {
+        router.push({ name: 'user-list' })
+        return
+      }
+      user.value = getCachedUser(idAsNumber)
+    })
 })
 
 function handleUpdate() {
   if (!user.value) return
-  user.value.firstName = 'Sebek'
 
-  updateUser(user.value).then(() => {
-    router.push({ name: 'user-list' })
-  })
+  updateUser(user.value)
+    .then(() => {
+      updateCachedUser(user.value)
+    })
+    .finally(() => {
+      router.push({ name: 'user-list' })
+    })
 }
 
 function handleDelete() {
   if (!user.value) return
 
-  deleteUser(user.value.id).then((res) => {
-    if (res.status > 200 && res.status < 300) {
+  deleteUser(user.value.id)
+    .then(() => {
+      deleteCachedUser(user.value.id)
+    })
+    .finally(() => {
       router.push({ name: 'user-list' })
-    }
-  })
+    })
 }
 
 function handleChangePhoto() {
-  console.log('Change photo')
+  dialog.value = false
 }
 </script>
 
@@ -80,7 +93,7 @@ function handleChangePhoto() {
           :placeholder="addEditUserContent.enterFirstName"
           variant="outlined"
           class="w-100"
-          :value="firstName"
+          v-model="user.firstName"
         >
         </v-text-field>
       </div>
@@ -93,25 +106,45 @@ function handleChangePhoto() {
           :placeholder="addEditUserContent.enterLastName"
           variant="outlined"
           class="w-100"
-          :value="lastName"
+          v-model="user.lastName"
         ></v-text-field>
       </div>
     </template>
 
     <template #avatar>
-      <v-avatar :image="avatar" size="100" class="border-secondary outline mb-5"></v-avatar>
+      <v-avatar :image="user.avatar" size="100" class="border-secondary outline mb-5"></v-avatar>
     </template>
 
     <template #change-photo-button>
-      <v-btn
-        prepend-icon="mdi-camera"
-        variant="outlined"
-        class="text-capitalize letter-spacing-0 text-darken1"
-        block
-        @click="handleChangePhoto"
-      >
-        {{ addEditUserContent.changePhoto }}
-      </v-btn>
+      <v-dialog v-model="dialog" width="auto">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            prepend-icon="mdi-camera"
+            variant="outlined"
+            class="text-capitalize letter-spacing-0 text-darken1"
+            block
+            v-bind="props"
+          >
+            {{ addEditUserContent.changePhoto }}
+          </v-btn>
+        </template>
+
+        <v-card class="pa-5">
+          <v-card-text> {{ addEditUserContent.enterPhotoUrl }} </v-card-text>
+          <v-text-field
+            name="avatar"
+            :placeholder="addEditUserContent.enterPhotoUrl"
+            variant="outlined"
+            class="w-100"
+            v-model="user.avatar"
+          ></v-text-field>
+          <v-card-actions>
+            <v-btn color="primary" block @click="handleChangePhoto">
+              {{ addEditUserContent.ok }}</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </template>
   </add-edit-user-layout>
 </template>

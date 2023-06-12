@@ -6,7 +6,7 @@
       "searchForUsers": "Search for users",
       "fullName": "Full Name",
       "actions": "Actions",
-      "noMatch": "There is no more users matching:",
+      "noMatch": "There is no more users matching your search.",
       "checkNextOrPreviousPage": "Check next or previous page."
     },
     "addEditUser": {
@@ -19,7 +19,9 @@
       "deleteUser": "Delete User",
       "updateDetails": "Update Details",
       "enterFirstName": "Enter first name",
-      "enterLastName": "Enter last name"
+      "enterLastName": "Enter last name",
+      "enterPhotoUrl": "Enter photo url",
+      "ok": "Ok"
     },
     "notFound": {
       "title": "404 - Page not found",

@@ -1,29 +1,39 @@
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import useUsers from '@composables/useUsers'
+import { useUsers } from '@composables'
+import { useUserStore } from '@/store'
 import content from '@/assets/content.json'
 import AddEditUserLayout from '@/layouts/AddEditUserLayout.vue'
 
 const addEditUserContent = content.views.addEditUser
 
+const firstName = ref('')
+const lastName = ref('')
+const avatar = ref('')
+const dialog = ref(false)
+
 const router = useRouter()
-const { createUser } = useUsers()
+const { createUser, error } = useUsers()
+const userStore = useUserStore()
+const { addCachedUser } = userStore
 
 function handleAddUser() {
-  const user = {
-    firstName: 'Sebek',
-    lastName: 'Sebek',
-    email: 'sbkjarmul@wp.pl',
-    avatar: 'http://obrazk.pl'
+  const newUser = {
+    firstName: firstName.value,
+    lastName: lastName.value,
+    avatar: avatar.value
   }
 
-  createUser(user).then(() => {
+  createUser(newUser).then((user) => {
+    if (error.value) return
+    addCachedUser(user)
     router.push({ name: 'user-list' })
   })
 }
 
 function handleChangePhoto() {
-  console.log('Change photo')
+  dialog.value = false
 }
 </script>
 
@@ -41,6 +51,7 @@ function handleChangePhoto() {
           :placeholder="addEditUserContent.enterFirstName"
           variant="outlined"
           class="w-100"
+          v-model="firstName"
         >
         </v-text-field>
       </div>
@@ -53,6 +64,7 @@ function handleChangePhoto() {
           :placeholder="addEditUserContent.enterLastName"
           variant="outlined"
           class="w-100"
+          v-model="lastName"
         ></v-text-field>
       </div>
     </template>
@@ -62,24 +74,45 @@ function handleChangePhoto() {
         variant="flat"
         class="bg-primary text-capitalize letter-spacing-0"
         @click="handleAddUser"
+        :disabled="!firstName || !lastName || !avatar"
         >{{ addEditUserContent.addUser }}
       </v-btn>
     </template>
 
     <template #avatar>
-      <v-avatar :image="'avatar'" size="100" class="border-secondary outline mb-5"></v-avatar>
+      <v-avatar :image="avatar" size="100" class="border-secondary outline mb-5"></v-avatar>
     </template>
 
     <template #change-photo-button>
-      <v-btn
-        prepend-icon="mdi-camera"
-        variant="outlined"
-        class="text-capitalize letter-spacing-0 text-darken1"
-        block
-        @click="handleChangePhoto"
-      >
-        {{ addEditUserContent.changePhoto }}
-      </v-btn>
+      <v-dialog v-model="dialog" width="auto">
+        <template v-slot:activator="{ props }">
+          <v-btn
+            prepend-icon="mdi-camera"
+            variant="outlined"
+            class="text-capitalize letter-spacing-0 text-darken1"
+            block
+            v-bind="props"
+          >
+            {{ addEditUserContent.changePhoto }}
+          </v-btn>
+        </template>
+
+        <v-card class="pa-5">
+          <v-card-text> {{ addEditUserContent.enterPhotoUrl }} </v-card-text>
+          <v-text-field
+            name="avatar"
+            :placeholder="addEditUserContent.enterPhotoUrl"
+            variant="outlined"
+            class="w-100"
+            v-model="avatar"
+          ></v-text-field>
+          <v-card-actions>
+            <v-btn color="primary" block @click="handleChangePhoto">
+              {{ addEditUserContent.ok }}</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </template>
   </add-edit-user-layout>
 </template>

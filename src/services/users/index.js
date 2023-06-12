@@ -1,7 +1,7 @@
 class UsersService {
   dtoToUser(dto) {
     return new User({
-      id: dto.id,
+      id: Number(dto.id),
       firstName: dto.first_name,
       lastName: dto.last_name,
       email: dto.email,

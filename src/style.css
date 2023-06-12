@@ -46,8 +46,7 @@
 }
 
 .outline {
-  outline: 1px solid rgb(var(--v-theme-darken1));
-  opacity: 0.2;
+  outline: 1px solid rgba(var(--v-theme-darken1), 0.4);
 }
 
 .w-sm-60 {

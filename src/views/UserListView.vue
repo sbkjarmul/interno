@@ -3,25 +3,26 @@ import { ref, watchEffect, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsers } from '@composables'
 import { useUserStore } from '@/store'
-import content from '@/assets/content.json'
-import MainLayout from '@/layouts/MainLayout.vue'
 import { storeToRefs } from 'pinia'
+import MainLayout from '@/layouts/MainLayout.vue'
+import content from '@/assets/content.json'
 
 const userListContent = content.views.userList
+
 const search = ref('')
 const page = ref(1)
 
 const router = useRouter()
-const { deleteUser } = useUsers()
+const { deleteUser, error } = useUsers()
 const userStore = useUserStore()
-const { loadUsers } = userStore
-const { cachedUsers, totalPages } = storeToRefs(userStore)
+const { deleteCachedUser, loadPage } = userStore
+const { totalPages, pagedUsers } = storeToRefs(userStore)
 
-const filteredUsers = computed(() => cachedUsers.value.filter(filterWithSearch))
+const filteredUsers = computed(() => pagedUsers.value.filter(filterWithSearch))
 
 watchEffect(() => {
   console.log('rerender UserListView')
-  loadUsers()
+  loadPage(page.value)
 })
 
 function filterWithSearch(user) {
@@ -44,10 +45,11 @@ function handleEditIconClick(userId) {
 function handleDeleteIconClick(userId) {
   if (!userId) return
 
-  deleteUser(userId).then((res) => {
-    if (res.status > 200 && res.status < 300) {
-      router.push({ name: 'user-list' })
-    }
+  deleteUser(userId).then(() => {
+    if (error.value) return
+
+    deleteCachedUser(userId)
+    router.push({ name: 'user-list' })
   })
 }
 </script>
@@ -122,7 +124,7 @@ function handleDeleteIconClick(userId) {
 
       <template v-else>
         <p>
-          {{ userListContent.noMatch }} "<b>{{ search }}"</b>
+          {{ userListContent.noMatch }}
         </p>
         <p>{{ userListContent.checkNextOrPreviousPage }}</p>
       </template>

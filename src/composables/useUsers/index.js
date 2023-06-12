@@ -11,6 +11,7 @@ const useUsers = () => {
 
   const getAllUsers = async (params) => {
     loading.value = true
+
     const response = await api.get(`${API_PREFIX}`, params)
 
     if (response.status === 200) {
@@ -23,24 +24,19 @@ const useUsers = () => {
     } else {
       loading.value = false
       error.value = response.message
-
-      return {}
     }
   }
 
   const getUser = async (id) => {
     loading.value = true
+
     const response = await api.get(`${API_PREFIX}/${id}`)
 
     if (response.status === 200) {
       loading.value = false
-
-      return userService.dtoToUser(response.data.data)
     } else {
       loading.value = false
       error.value = response.message
-
-      return {}
     }
   }
 
@@ -49,34 +45,27 @@ const useUsers = () => {
 
     const dto = userService.userToDto(data)
     const response = await api.patch(`${API_PREFIX}/${dto.id}`, dto)
-
     if (response.status >= 200 && response.status < 300) {
-      const updatedUser = userService.dtoToUser(response.data)
       loading.value = false
-
-      return updatedUser
     } else {
       loading.value = false
       error.value = response.message
-
-      return {}
     }
   }
 
   const createUser = async (data) => {
     loading.value = true
 
-    const response = await api.post(`${API_PREFIX}`, data)
+    const dto = userService.userToDto(data)
+    const response = await api.post(`${API_PREFIX}`, dto)
 
-    if (response.status === 200) {
+    if (response.status >= 200 && response.status <= 300) {
+      const user = userService.dtoToUser(response.data)
       loading.value = false
-
-      return response.data.data
+      return user
     } else {
       loading.value = false
       error.value = response.message
-
-      return {}
     }
   }
 
@@ -84,15 +73,12 @@ const useUsers = () => {
     loading.value = true
 
     const response = await api.delete(`${API_PREFIX}/${id}`)
+
     if (response.status >= 200 && response.status < 300) {
       loading.value = false
-
-      return { status: response.status }
     } else {
       loading.value = false
       error.value = response.message
-
-      return {}
     }
   }
 
@@ -101,7 +87,9 @@ const useUsers = () => {
     getUser,
     updateUser,
     createUser,
-    deleteUser
+    deleteUser,
+    error,
+    loading
   }
 }
 
