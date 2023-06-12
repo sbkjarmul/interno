@@ -21,7 +21,6 @@ const { totalPages, pagedUsers } = storeToRefs(userStore)
 const filteredUsers = computed(() => pagedUsers.value.filter(filterWithSearch))
 
 watchEffect(() => {
-  console.log('rerender UserListView')
   loadPage(page.value)
 })
 

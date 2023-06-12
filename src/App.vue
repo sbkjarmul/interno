@@ -1,14 +1,9 @@
 <script setup>
 import { useUserStore } from '@/store'
-import { watchEffect } from 'vue'
 const userStore = useUserStore()
 const { loadUsersToCache } = userStore
 
 loadUsersToCache()
-
-watchEffect(() => {
-  console.log('rerender App - store cleared!')
-})
 </script>
 
 <template>
