@@ -1,3 +1,57 @@
+<script setup>
+import { ref, watchEffect, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUsers } from '@composables'
+import { useUserStore } from '@/store'
+import content from '@/assets/content.json'
+import MainLayout from '@/layouts/MainLayout.vue'
+import { storeToRefs } from 'pinia'
+
+const userListContent = content.views.userList
+const search = ref('')
+const page = ref(1)
+
+const router = useRouter()
+const { deleteUser } = useUsers()
+const userStore = useUserStore()
+const { loadUsers } = userStore
+const { cachedUsers, totalPages } = storeToRefs(userStore)
+
+const filteredUsers = computed(() => cachedUsers.value.filter(filterWithSearch))
+
+watchEffect(() => {
+  console.log('rerender UserListView')
+  loadUsers()
+})
+
+function filterWithSearch(user) {
+  const fullName = `${user.firstName} ${user.lastName}`.toLowerCase()
+  const searchValue = search.value.toLowerCase()
+
+  if (fullName.includes(searchValue)) {
+    return user
+  }
+}
+
+function handleAddButtonClick() {
+  router.push({ name: 'add-user' })
+}
+
+function handleEditIconClick(userId) {
+  router.push({ name: 'edit-user', params: { id: userId } })
+}
+
+function handleDeleteIconClick(userId) {
+  if (!userId) return
+
+  deleteUser(userId).then((res) => {
+    if (res.status > 200 && res.status < 300) {
+      router.push({ name: 'user-list' })
+    }
+  })
+}
+</script>
+
 <template>
   <MainLayout>
     <template #title>{{ userListContent.title }}</template>
@@ -84,61 +138,6 @@
     </template>
   </MainLayout>
 </template>
-
-<script setup>
-import { ref, watchEffect, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import useUsers from '@composables/useUsers'
-import content from '@/assets/content.json'
-import MainLayout from '@/layouts/MainLayout.vue'
-
-const userListContent = content.views.userList
-// const users = ref([])
-const search = ref('')
-const page = ref(1)
-const totalPages = ref(0)
-
-const router = useRouter()
-const { getAllUsers, deleteUser, cachedUsers: users } = useUsers()
-
-const filteredUsers = computed(() =>
-  users.value.filter((user) => {
-    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase()
-    const searchValue = search.value.toLowerCase()
-
-    if (fullName.includes(searchValue)) {
-      return user
-    }
-  })
-)
-
-watchEffect(() => {
-  console.log('rerender UserListView')
-  getAllUsers({ page: page.value }).then((res) => {
-    totalPages.value = res.totalPages
-  })
-})
-
-function handleAddButtonClick() {
-  router.push({ name: 'add-user' })
-}
-
-function handleEditIconClick(userId) {
-  console.log(userId)
-  router.push({ name: 'edit-user', params: { id: userId } })
-}
-
-function handleDeleteIconClick(userId) {
-  if (!userId) return
-
-  deleteUser(userId).then((res) => {
-    if (res.status > 200 && res.status < 300) {
-      removeCachedUser(userId)
-      router.push({ name: 'user-list' })
-    }
-  })
-}
-</script>
 
 <style scoped>
 /* Pagination */

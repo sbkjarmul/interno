@@ -1,3 +1,32 @@
+<script setup>
+import { useRouter } from 'vue-router'
+import useUsers from '@composables/useUsers'
+import content from '@/assets/content.json'
+import AddEditUserLayout from '@/layouts/AddEditUserLayout.vue'
+
+const addEditUserContent = content.views.addEditUser
+
+const router = useRouter()
+const { createUser } = useUsers()
+
+function handleAddUser() {
+  const user = {
+    firstName: 'Sebek',
+    lastName: 'Sebek',
+    email: 'sbkjarmul@wp.pl',
+    avatar: 'http://obrazk.pl'
+  }
+
+  createUser(user).then(() => {
+    router.push({ name: 'user-list' })
+  })
+}
+
+function handleChangePhoto() {
+  console.log('Change photo')
+}
+</script>
+
 <template>
   <add-edit-user-layout>
     <template #title>{{ addEditUserContent.addUser }}</template>
@@ -54,35 +83,6 @@
     </template>
   </add-edit-user-layout>
 </template>
-
-<script setup>
-import { useRouter } from 'vue-router'
-import useUsers from '@composables/useUsers'
-import content from '@/assets/content.json'
-import AddEditUserLayout from '@/layouts/AddEditUserLayout.vue'
-
-const addEditUserContent = content.views.addEditUser
-
-const router = useRouter()
-const { createUser } = useUsers()
-
-function handleAddUser() {
-  const user = {
-    firstName: 'Sebek',
-    lastName: 'Sebek',
-    email: 'sbkjarmul@wp.pl',
-    avatar: 'http://obrazk.pl'
-  }
-
-  createUser(user).then(() => {
-    router.push({ name: 'user-list' })
-  })
-}
-
-function handleChangePhoto() {
-  console.log('Change photo')
-}
-</script>
 
 <style scoped>
 /* Input */

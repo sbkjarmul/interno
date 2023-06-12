@@ -6,83 +6,94 @@ const API_PREFIX = '/users'
 
 const useUsers = () => {
   const userService = new UserService()
-
-  const cachedUsers = ref([])
+  const error = ref('')
+  const loading = ref(false)
 
   const getAllUsers = async (params) => {
+    loading.value = true
     const response = await api.get(`${API_PREFIX}`, params)
+
     if (response.status === 200) {
-      cachedUsers.value = response.data.data.map((dto) => userService.dtoToUser(dto))
+      loading.value = false
 
       return {
         data: response.data.data.map((dto) => userService.dtoToUser(dto)),
         totalPages: response.data.total_pages
       }
     } else {
+      loading.value = false
+      error.value = response.message
+
       return {}
     }
   }
 
   const getUser = async (id) => {
+    loading.value = true
     const response = await api.get(`${API_PREFIX}/${id}`)
 
     if (response.status === 200) {
+      loading.value = false
+
       return userService.dtoToUser(response.data.data)
     } else {
+      loading.value = false
+      error.value = response.message
+
       return {}
     }
   }
 
   const updateUser = async (data) => {
+    loading.value = true
+
     const dto = userService.userToDto(data)
     const response = await api.patch(`${API_PREFIX}/${dto.id}`, dto)
 
     if (response.status >= 200 && response.status < 300) {
       const updatedUser = userService.dtoToUser(response.data)
-      updateCachedUser(updatedUser)
+      loading.value = false
+
       return updatedUser
     } else {
+      loading.value = false
+      error.value = response.message
+
       return {}
     }
   }
 
   const createUser = async (data) => {
+    loading.value = true
+
     const response = await api.post(`${API_PREFIX}`, data)
 
     if (response.status === 200) {
+      loading.value = false
+
       return response.data.data
     } else {
+      loading.value = false
+      error.value = response.message
+
       return {}
     }
   }
 
   const deleteUser = async (id) => {
+    loading.value = true
+
     const response = await api.delete(`${API_PREFIX}/${id}`)
     if (response.status >= 200 && response.status < 300) {
-      removeCachedUser(id)
+      loading.value = false
+
       return { status: response.status }
     } else {
+      loading.value = false
+      error.value = response.message
+
       return {}
     }
-  }
-
-  function updateCachedUser(updatedUser) {
-    const index = cachedUsers.value.findIndex((user) => user.id === updatedUser.id)
-    if (index === -1) return
-
-    cachedUsers.value.splice(index, 1, updatedUser)
-  }
-
-  function removeCachedUser(userId) {
-    const index = cachedUsers.value.findIndex((user) => user.id === userId)
-
-    if (index === -1) return
-
-    cachedUsers.value.splice(index, 1)
-  }
-
-  function addCachedUser(user) {
-    cachedUsers.value.push(user)
   }
 
   return {
@@ -90,8 +101,7 @@ const useUsers = () => {
     getUser,
     updateUser,
     createUser,
-    deleteUser,
-    cachedUsers
+    deleteUser
   }
 }
 
