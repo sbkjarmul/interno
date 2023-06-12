@@ -6,25 +6,25 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
 const vuetify = createVuetify({
-  components,
-  directives,
-  icons: {
-    defaultSet: 'mdi'
-  },
-  theme: {
-    themes: {
-      light: {
-        dark: false,
-        colors: {
-          primary: colors.teal.darken2,
-          secondary: colors.grey.lighten4,
-          white: colors.shades.white,
-          darken3: colors.grey.darken3,
-          darken1: colors.grey.darken1
+    components,
+    directives,
+    icons: {
+        defaultSet: 'mdi'
+    },
+    theme: {
+        themes: {
+            light: {
+                dark: false,
+                colors: {
+                    primary: colors.teal.darken2,
+                    secondary: colors.grey.lighten4,
+                    white: colors.shades.white,
+                    darken3: colors.grey.darken3,
+                    darken1: colors.grey.darken1
+                }
+            }
         }
-      }
     }
-  }
 })
 
 export default vuetify

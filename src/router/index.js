@@ -2,23 +2,23 @@ import UserListView from '@/views/UserListView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
-  { path: '/', name: 'user-list', component: UserListView },
-  { path: '/add-user', name: 'add-user', component: () => import('@/views/AddUserView.vue') },
-  {
-    path: '/edit-user/:id',
-    name: 'edit-user',
-    component: () => import('@/views/EditUserView.vue')
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'not-found',
-    component: () => import('@/views/NotFoundView.vue')
-  }
+    { path: '/', name: 'user-list', component: UserListView },
+    { path: '/add-user', name: 'add-user', component: () => import('@/views/AddUserView.vue') },
+    {
+        path: '/edit-user/:id',
+        name: 'edit-user',
+        component: () => import('@/views/EditUserView.vue')
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'not-found',
+        component: () => import('@/views/NotFoundView.vue')
+    }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes
+    history: createWebHistory(),
+    routes
 })
 
 export default router

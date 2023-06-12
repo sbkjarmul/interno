@@ -1,32 +1,32 @@
 {
-  "views": {
-    "userList": {
-      "title": "User List",
-      "addUser": "Add User",
-      "searchForUsers": "Search for users",
-      "fullName": "Full Name",
-      "actions": "Actions",
-      "noMatch": "There is no more users matching your search.",
-      "checkNextOrPreviousPage": "Check next or previous page."
-    },
-    "addEditUser": {
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "addUser": "Add User",
-      "editUser": "Edit User",
-      "addPhoto": "Add photo",
-      "changePhoto": "Change Photo",
-      "deleteUser": "Delete User",
-      "updateDetails": "Update Details",
-      "enterFirstName": "Enter first name",
-      "enterLastName": "Enter last name",
-      "enterPhotoUrl": "Enter photo url",
-      "ok": "Ok"
-    },
-    "notFound": {
-      "title": "404 - Page not found",
-      "message": "The page you are looking for does not exist.",
-      "backToUserList": "Back to User List"
+    "views": {
+        "userList": {
+            "title": "User List",
+            "addUser": "Add User",
+            "searchForUsers": "Search for users",
+            "fullName": "Full Name",
+            "actions": "Actions",
+            "noMatch": "There is no more users matching your search.",
+            "checkNextOrPreviousPage": "Check next or previous page."
+        },
+        "addEditUser": {
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "addUser": "Add User",
+            "editUser": "Edit User",
+            "addPhoto": "Add photo",
+            "changePhoto": "Change Photo",
+            "deleteUser": "Delete User",
+            "updateDetails": "Update Details",
+            "enterFirstName": "Enter first name",
+            "enterLastName": "Enter last name",
+            "enterPhotoUrl": "Enter photo url",
+            "ok": "Ok"
+        },
+        "notFound": {
+            "title": "404 - Page not found",
+            "message": "The page you are looking for does not exist.",
+            "backToUserList": "Back to User List"
+        }
     }
-  }
 }
