@@ -5,12 +5,13 @@ import { useUsers } from '@/composables'
 import { useUserStore } from '@/store'
 import content from '@/assets/content.json'
 import AddEditUserLayout from '@/layouts/AddEditUserLayout.vue'
+import defaultAvatar from '@/assets/images/default-avatar.png'
 
 const addEditUserContent = content.views.addEditUser
 
 const firstName = ref('')
 const lastName = ref('')
-const avatar = ref('')
+const avatar = ref(defaultAvatar)
 const dialog = ref(false)
 
 const router = useRouter()
@@ -76,7 +77,8 @@ function handleChangePhoto() {
                 class="bg-primary text-capitalize letter-spacing-0"
                 @click="handleAddUser"
                 :disabled="!firstName || !lastName || !avatar"
-                >{{ addEditUserContent.addUser }}
+            >
+                {{ addEditUserContent.addUser }}
             </v-btn>
         </template>
 
@@ -108,11 +110,12 @@ function handleChangePhoto() {
                         variant="outlined"
                         class="w-100"
                         v-model="avatar"
-                    ></v-text-field>
+                    >
+                    </v-text-field>
                     <v-card-actions>
                         <v-btn color="primary" block @click="handleChangePhoto">
-                            {{ addEditUserContent.ok }}</v-btn
-                        >
+                            {{ addEditUserContent.ok }}
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>

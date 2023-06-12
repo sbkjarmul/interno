@@ -70,7 +70,8 @@ function handleDeleteIconClick(userId) {
                     rounded="xl"
                     class="bg-primary text-capitalize letter-spacing-0"
                     @click="handleAddButtonClick"
-                    >{{ userListContent.addUser }}
+                >
+                    {{ userListContent.addUser }}
                 </v-btn>
             </div>
         </template>

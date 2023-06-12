@@ -16,7 +16,7 @@
             <slot name="main"></slot>
         </div>
 
-        <div class="w-100">
+        <div class="w-100 pb-5 pb-sm-0">
             <slot name="bottom"></slot>
         </div>
     </div>

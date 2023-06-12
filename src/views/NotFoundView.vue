@@ -20,7 +20,8 @@ const handleBackToUserList = () => {
                 variant="flat"
                 class="bg-primary text-capitalize letter-spacing-0"
                 @click="handleBackToUserList"
-                >{{ notFoundContent.backToUserList }}
+            >
+                {{ notFoundContent.backToUserList }}
             </v-btn>
         </div>
     </div>
