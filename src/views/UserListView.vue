@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect, computed } from 'vue'
+import { ref, watchEffect, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsers } from '@composables'
 import { useUserStore } from '@/store'
@@ -18,19 +18,13 @@ const userStore = useUserStore()
 const { deleteCachedUser, loadPage } = userStore
 const { totalPages, pagedUsers } = storeToRefs(userStore)
 
-const filteredUsers = computed(() => pagedUsers.value.filter(filterWithSearch))
-
 watchEffect(() => {
-  loadPage(page.value)
+  resetPage()
+  loadPage(page.value, search.value)
 })
 
-function filterWithSearch(user) {
-  const fullName = `${user.firstName} ${user.lastName}`.toLowerCase()
-  const searchValue = search.value.toLowerCase()
-
-  if (fullName.includes(searchValue)) {
-    return user
-  }
+function resetPage() {
+  page.value = search.value !== '' ? 1 : page.value
 }
 
 function handleAddButtonClick() {
@@ -81,7 +75,7 @@ function handleDeleteIconClick(userId) {
     </template>
 
     <template #main>
-      <v-table v-if="filteredUsers.length">
+      <v-table v-if="pagedUsers.length">
         <thead>
           <tr>
             <th class="text-left" width="10%"></th>
@@ -95,7 +89,7 @@ function handleDeleteIconClick(userId) {
         </thead>
         <tbody>
           <tr
-            v-for="(item, index) in filteredUsers"
+            v-for="(item, index) in pagedUsers"
             :key="item.id"
             :class="{ 'bg-secondary': !(index % 2) }"
           >

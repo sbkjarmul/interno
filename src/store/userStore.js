@@ -17,11 +17,19 @@ const useUsersStore = defineStore('users', () => {
     })
   }
 
-  function loadPage(page = 1) {
+  function loadPage(page = 1, search = '') {
     const startIndex = (page - 1) * MAX_USERS_PER_PAGE
     const endIndex = startIndex + MAX_USERS_PER_PAGE
-    pagedUsers.value = cachedUsers.value.slice(startIndex, endIndex)
-    totalPages.value = Math.ceil(cachedUsers.value.length / MAX_USERS_PER_PAGE)
+    const filteredUsers = cachedUsers.value.filter((user) => {
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase()
+      const searchValue = search.toLowerCase()
+
+      if (fullName.includes(searchValue)) {
+        return user
+      }
+    })
+    pagedUsers.value = filteredUsers.slice(startIndex, endIndex)
+    totalPages.value = Math.ceil(filteredUsers.length / MAX_USERS_PER_PAGE)
   }
 
   function getCachedUser(userId) {
